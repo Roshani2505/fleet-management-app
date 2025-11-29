@@ -230,7 +230,31 @@
                     toggleAvailability(index);
                 });
 
+                let delBtn=document.createElement("button");
+                delBtn.className="smallBtn danger";
+                delBtn.textContent="Delete vehicle";
+                delBtn.addEventListener("click",function(){
+                    deleteFleet(index);
+                });
+                action.appendChild(upBtn);
+                action.appendChild(chBtn);
+                action.appendChild(delBtn);
+
+                card.appendChild(img);
+                card.appendChild(h4);
+                card.appendChild(catP);
+                card.appendChild(driverP);
+                card.appendChild(availP);
+                card.appendChild(actions);
+
+                fleetContainer.appendChild(card);
+            });
+
+            function updateDriver(index){
+                let current=fleet[index];
+                let newName=prompt("enter new driver name:")
             }
+
         }
 
     </script>
