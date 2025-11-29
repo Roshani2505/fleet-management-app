@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body{
+            font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+             background: rgb(239, 209, 219);
+             margin: 0;
+             padding: 0;
+        }
+
+        .navbar{
+            background-color: aliceblue;
+            color: rgb(5, 5, 112);
+            padding: 10px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .navbar .brand{
+            font-weight: bold;
+        }
+
+        .navbar .filter{
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        select, button,input{
+            padding: 6px 8px;
+            border-radius: 6px;
+            border: 1px solid black;
+            font-size: 14px;
+        }
+        button.primary{
+            background: lightcyan;
+            border: none;
+            cursor: pointer;
+        }
+        button.primary:hover{
+            opacity: 0.9;
+        }
+
+        .layout{
+            display: flex;
+            gap: 16px;
+            padding: 16px;
+        }
+
+        .sidebar{
+            width: 280px;
+            background-color: aliceblue;
+            padding: 12px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px plum;
+            height: fit-content;
+        }
+
+        .main{
+            flex: 1;
+        }
+
+        .grid{
+            display: grid;
+            grid-template-columns: repeat(3,1fr);
+            gap: 16px;
+        }
+
+        .card{
+            background: lightskyblue;
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 2px 8px plum;
+        }
+        .card img{
+            width: 120px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 6px;
+            display: block;
+            margin: 0 auto 8px auto;
+        }
+
+    
+        
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <div class="brand">FLEET MANAGEMENT-ADMIN</div>
+        <div class="filter">
+            <label style="color: rgb(17, 88, 151); font-size: 15px; margin: 0 6px 0 0;">CATEGORY</label>
+            <select id="FilterCategory">
+                <option value="All">All</option>
+                <option value="Car">Car</option>
+                <option value="Bus">Bus</option>
+                <option value="Auto">Auto</option>
+                <option value="Truck">Truck</option>
+            </select>
+            
+            <label style="color: blueviolet; font-size: 15px; margin: 0 6px 0 0;">Vehicle Availability</label>
+            <select id="filterAvailability">
+                <option value="All">All</option>
+                <option value="Available">Available</option>
+                <option value="Unavailable">Unavailable</option>
+            </select>
+
+            <button id="clearFilters" class="primary" style="margin-left: 8px;">clear Filters</button>
+        </div>
+    </div>
+
+    <div class="layout">
+        <div class="sidebar">
+            <h3>Add Fleet</h3>
+            <label>Registeration Number</label><br>
+            <input type="text" id="regInput" placeholder="eg:DL1A0000"> <br>
+            <label>CATEGORY</label><br>
+            <select id="categoryInput">
+                <option value="">Select Category</option>
+                <option value="Car">Car</option>
+                <option value="Bus">Bus</option>
+                <option value="Auto">Auto</option>
+                <option value="Truck">Truck</option>
+            </select> <br>
+            <label>Driver Name</label>
+            <input type="text" id="driverInput" placeholder="Driver Name">
+            <label style="margin-top: 8px;">
+                <input type="checkbox" id="availableINput"> Available
+            </label>
+
+            <button id="addFleetBtn" class="primary" style="display: none; color: bisque;">Add Fleet</button>
+
+        </div>
+
+        <div class="main">
+            <h3>Fleet Vehicle</h3>
+            <div id="fleetContainer" class="grid"></div>
+            <p id="emptynote">No vehicle to display</p>
+
+        </div>
+
+    </div>
+
+    <script>
+
+        const IMAGE_URL= "https://coding-platform.s3.amazonaws.com/dev/lms/tickets/5e80fcb6-3f8e-480c-945b-30a5359eb40e/JNmYjkVr3WOjsrbu.png";
+
+        const regInput=document.getElementById ("regInput");
+        const categoryInput=document.getElementById("categoryInput");
+        const driverInput=document. getElementById("driverInput");
+        const availableINput=document.getElementById("availableInput");
+        const addFleetBtn=document.getElementById("addFleetBtn");
+        const fleetContainer=document.getElementById("fleetContainer")
+        const emptynote =document.getElementById("emptynote");
+        const FilterCategory=document.getElementById("FilterCategory");
+        const clearFilters=document.getElementById("clearFilter");
+
+        addFleetBtn.addEventListener("click" , function(){
+            let reg=regInput.value.trim();
+            let category=categoryInput.value;
+            let Driver=driverInput.value.trim;
+            let Available=availableINput.Checked;
+
+            if (!reg){
+                alert("registeration number is required");
+                return;
+            }
+            if(!category){
+                alert("plaese select a category");
+                return;
+            }
+
+            if (!driver)driver="not assigned";
+
+            let fleet={
+                reg,
+                category,
+                driver,
+                Available
+            };
+            fleet.push(fleet);
+            renderFleets(applyCurrentFilters());
+            regInput.value="";
+            categoryInput.value="";
+            driverInput.value="";
+            availableINput.Checked=false;
+        });
+
+        function renderFleets(list){
+            fleetContainer.innerHTML="";
+
+            if(!list || list.length===0){
+                emptynote.style.display="block";
+                return;
+            }else{
+                emptynote.style.display="none";
+            }
+            list.forEach((fleet.index)=>{
+                let card=document.createElement("div");
+                card.className="card";
+
+                let img=document.createElement("img");
+                img.scr=IMAGE_URL;
+
+                let h4=document.createElement("h4")
+                h4.textContect=fleet.reg;
+
+                let catP=document.createElement("p");
+                driver.P.textcontent="availability:"+(fleet.Available?"available": "Unavaialable":);
+                let action=documemt.createElement("div");
+                actions.className="actions";
+
+                let upBtn=document.createElement("button");
+                upBtn.className="smallBtn muted";
+                upBtn.textContent="update dricer";
+                upBtn.addEventListener("click",function(){
+                    updateDriver(index);
+                });
+
+                let chBtn=document.createElement("button");
+                chBtn.className="smallBtn";
+                chBtn.textContent=fleet.Available?"mark unavailable": "mark available";
+                chBtn.addEventListener("click", function(){
+                    toggleAvailability(index);
+                });
+
+            }
+        }
+
+    </script>
+</body>
+</html>
